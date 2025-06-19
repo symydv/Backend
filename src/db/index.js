@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { DB_NAME } from "../constants.js";
 
 
+//connecting database can cause error as it is on another continent
+//using async await as db can take time in loading. and also use try catch for error handling
 
 const connectDB = async () => {
     try {

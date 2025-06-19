@@ -1,7 +1,3 @@
-// we have used nodemon to constantly refresh the server whenever we edit our index.js,
-// for that we have installed nodemon using "npm i -D nodemon" in our terminal inside package.json, (here -D represents dev dependency)
-// we also added "dev": "nodemon src/index.js" inside script in package.json
-
 
 // require("dotenv").config({path: "./env"});  
 import dotenv from "dotenv"
@@ -9,12 +5,25 @@ import dotenv from "dotenv"
 import mongoose from "mongoose";
 import { DB_NAME } from "./constants.js";
 import connectDB from "./db/index.js";
+import { app } from "./app.js";
 
 dotenv.config({
     path: "./env"
 })
 
-connectDB()
+
+
+connectDB()  //async function automatically returns a promise so we can use .then() and .catch() here.
+.then(() => {
+    app.listen(process.env.PORT || 8000, () => {
+        console.log(`Server is running at port : ${process.env.PORT}`);
+        
+    })
+})
+.catch((err) => {
+    console.log("MONGO db connection failed !!! ", err);
+    
+})
 
 
 
@@ -35,7 +44,7 @@ const app = express()
 //connecting database can cause error as it is on another continent
 //using async await as db can take time in loading. and also use try catch for error handling
 
-//below code is for emideate execution of function(note: is line ke pehle wali line ko semicolumn se end karna jaruri hai)
+//below code is for imedeate execution of function(note: is line ke pehle wali line ko semicolumn se end karna jaruri hai or it may cause error)
 ( async () => {
     try {
         await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`)

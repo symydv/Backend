@@ -14,7 +14,7 @@
 
 
 
-# Some information notes-
+# Some information/process notes-
 
 1. we first write "npm init" to initiallize the file formation of "package.json"
 
@@ -39,7 +39,7 @@
 8. prettier is installed using "npm i -D prettier" , and prettier is used so that when many developers are working on a project they follow same  format like "singleQuotes" or not or haw many spaces we use for indentation etc. for that we create ".pretteirrc" file
 
 9. we have added ".prettierignore" file which allows us to name files on which we dont want to add prettier laws like ".env" file .
-
+----------------
 10. we setup our database using mongodb atlas, watch lecture 7 first 10 minutes. also added db uri to ".env" file and added "export const DB_NAME = 'videotube'" in "constants.js" file
 
 11. use "npm i mongoose express dotenv" to install mongoose, express and dotenv packages
@@ -47,8 +47,14 @@
 12. there are two methods to connect database 
 {
     1: writing its code in "index.js" file itself.
-    2: writing db code in any other file and then importing it in "index.js",
+    2: writing db code in any other file and then import it in "index.js",
     for second method we have created a "index.js" file inside out "db" folder which is inside our "src" folder, and there we have written our code to connect database.
 }
 
 13. in the "package.json" file we have added "-r dotenv/config --experimental-json-modules" in script between "nodemon" and "./src/index.js" so that we can use import syntax for "dotenv" also. We can use "require" syntax as it is.
+----------------
+14. Create express app in app.js and export it.
+
+15. use "npm i cookie-parsser cors" to install cookie-parser and cors package and to import them in app.js to use them.
+
+16. we create files in "utils" (utilities), we creates this files to use them many times again and again in our codebase
