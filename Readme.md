@@ -58,3 +58,9 @@
 15. use "npm i cookie-parsser cors" to install cookie-parser and cors package and to import them in app.js to use them.
 
 16. we create files in "utils" (utilities), we creates this files to use them many times again and again in our codebase
+----------------
+17. created files in "models" direcotry for data modeling. Added models by looking into the link mentioned above in this file
+
+18. use "npm i mongoose-aggregate-paginate-v2" to install a package to use aggregation pipeline
+
+19. install bcrypt and jsonwebtoken (jwt) using "npm i bcrypt jsonwebtoken" , bcrypt helps you to hash(encrypt) your password. JWT is a compact, URL-safe way of representing claims (data) between two parties. It is commonly used for authentication and authorization in web applications. jwt is a bearer token.

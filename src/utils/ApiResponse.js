@@ -1,4 +1,4 @@
-//we dont have an inbuilt class for response sowe have to make it ourself.
+//we dont have an inbuilt class for response so we have to make it ourself.
 
 
 class ApiResponse {
