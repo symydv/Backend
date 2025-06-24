@@ -9,3 +9,5 @@ class ApiResponse {
         this.success = statusCode < 400 // for success statuCode should be less than 400, because above 400 codes are for errors, you can search "HTTP response status codes"
     }
 }
+
+export {ApiResponse}

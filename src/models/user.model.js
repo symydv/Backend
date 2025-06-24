@@ -82,24 +82,28 @@ userschema.pre("save", async function(next){  //using async as it may take some 
 //we can also create our own methods using .methods.methodName, like here we created "isPasswordCorrect" method
 userschema.methods.isPasswordCorrect = async function 
 (password) {
-    return await bcrypt.compare(password, this.password)   //compares given password to save password on database.
+    return await bcrypt.compare(password, this.password)   //compares given password with saved password on database.
 }
 
 userschema.methods.generateAccessToken = function(){ 
     //is process me time nahi lagata hai.
     return jwt.sign(
+        //1. payload 
         {
             _id: this._id,
             email: this.email,
             userName: this.userName,
             fullName: this.fullName
         },
+        //2. accesse token
         process.env.ACCESS_TOKEN_SECRET,
+        //3. expiry
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRY
         }
     )
 }
+//These methods generate signed JWTs for authentication and session management, using user info and secret keys from your environment variables.
 userschema.methods.generateRefreshToken = function(){
     return jwt.sign(
         {
@@ -111,5 +115,6 @@ userschema.methods.generateRefreshToken = function(){
         }
     )
 }
+
 
 export const User = mongoose.model("User", userschema);

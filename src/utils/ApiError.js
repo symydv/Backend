@@ -19,11 +19,14 @@ class ApiError extends Error{
         if(stack){
             this.stack = stack
         }else{
-            Error.captureStackTrace(this, this.constructur)
+            Error.captureStackTrace(this, this.constructor)
         }
     }
 }
 
 export {ApiError}
 
+
+// ApiError helps you create rich, consistent error objects for your API.
+// It makes error handling and debugging easier.
 //You can throw "ApiError" in your API routes and catch it in your error middleware to send structured error responses to the client.

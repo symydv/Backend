@@ -42,6 +42,9 @@ const videoSchema = new Schema(
 )
 
 videoSchema.plugin(mongooseAggregatePaginate)
-
+//videoSchema is your Mongoose schema for videos.
+// .plugin() is a Mongoose method that lets you add reusable functionality (a plugin) to your schema.
+// mongooseAggregatePaginate is a plugin that adds pagination support to Mongoose's .aggregate() queries.
+//Pagination is the process of dividing a large set of data into smaller, manageable chunks (pages), so you only display or process a limited number of items at a time.
 
 export const Video = mongoose.model("Video", videoSchema)
