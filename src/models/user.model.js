@@ -74,7 +74,7 @@ const userschema = new Schema(
 //  "save", matlab just save hone se pehle kuch use karna hai.
 userschema.pre("save", async function(next){  //using async as it may take some time.
     if(!this.isModified("password")) return next() //we used this line so that this code for encrypting password only runs when user is first time creating the password or modifying it. so it says if not modifying move to next task directly
-    this.password = bcrypt.hash(this.password, 10) //10 is just rounds do encryption it can be any number
+    this.password = await bcrypt.hash(this.password, 10) //10 is just rounds do encryption it can be any number
     next() //"next" ko last me call kiya hai because we want to move on to save, after encrypting our password.
 })
 

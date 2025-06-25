@@ -86,6 +86,8 @@ It’s like a digital pass that proves your identity every time you use the app!
     When you want to upload files (images, PDFs, etc.) from a frontend (HTML form or React app) to your Express server, you need to parse and store the files — Multer does that for you.
 }
 
+NOTE:- Multer is used to save our files locally for short time then it is stored in cloudinary.
+
 ----------------
 ---------------- #Configuration is almost 95% over, remaining we will see as we move into our project.
 we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#-----------------------
@@ -94,3 +96,7 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 23. we now procced to create controllers and their routes in "controllers" and "routes" directory respectively. Then import them in "app.js" . 
 
 24. Downloaded Postman on desktop and lernt about it watch lecture 12 from 23 minutes.
+----------------
+25. Now we will actually register a user in controllers.
+
+26. import {upload} from "../middlewares/multer.middleware.js" in our "user router" file
