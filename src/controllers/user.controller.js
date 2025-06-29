@@ -17,22 +17,22 @@ const registerUser = asyncHandler( async(req, res) => {
     //9. return res
 
     //1.
-    const {fullname, email, username, password} = req.body
-    console.log("email: ",email);
+    const {fullName, email, username, password} = req.body
+    // console.log("email: ",email);
 
     //2.
     if (
         //.some() goes through the array and checks if at least one of the fields meets the condition:
-        [fullname, email, username, password].some((field) => field?.trim() === "") 
+        [fullName, email, username, password].some((field) => field?.trim() === "") 
         //field might be undefined, so we use optional chaining (?.) to avoid errors.
         // .trim() removes any leading/trailing spaces, so " " becomes "".
-        //ye code pehle to sabhi field leta hai out of four fields we have provided then it checks that if the field if empty if so it returns true.{use AI to understand}, if we have not used this method we could have directly checked them using if( fullname === "" ) and so for all the fields separately
+        //ye code pehle to sabhi field leta hai out of four fields we have provided then it checks that if the field is empty if so it returns true.{use AI to understand}, if we have not used this method we could have directly checked them using if( fullname === "" ) and so for all the fields separately
     ) {
         throw new ApiError(400, `All fields are required`) //using our already created function for Error handling.
     }
     
     //3.
-    const existedUser = User.findOne({ //This is a Mongoose method that searches for a single user in the database.
+    const existedUser = await User.findOne({ //This is a Mongoose method that searches for a single user in the database.
         $or: [{ username }, { email }]  //$or is a MongoDB operator that allows you to specify multiple conditions.It returns documents that match at least one of the conditions.
         //Find a user where the username matches the provided username OR the email matches the provided email.
     })
@@ -40,6 +40,11 @@ const registerUser = asyncHandler( async(req, res) => {
     if (existedUser) {
         throw new ApiError(409, "User with email or username already exists")
     }
+
+
+    // console.log(req.files); //just to check what is this 
+    // console.log(req.body); //just to check what is this 
+    
 
     //4.
     const avatarLocalPath = req.files?.avatar[0]?.path; //This line safely gets the file path of the uploaded avatar image, if it exists.
@@ -57,7 +62,13 @@ const registerUser = asyncHandler( async(req, res) => {
 
     // path:
     // This is the location (on disk or in temp storage) where the uploaded file is saved.
-    const coverImageLocalPath = req.files?.coverImage[0]?.path;
+
+    // const coverImageLocalPath = req.files?.coverImage[0]?.path;
+    //or  //check on AI why we used below method.
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path;
+    }
 
     if (!avatarLocalPath) {
         throw new ApiError(400, "avatar image is required") //coverimage is not neccessarily  required as we have saved in models
@@ -73,7 +84,7 @@ const registerUser = asyncHandler( async(req, res) => {
 
     //6.
     const user = await User.create({ //Used to insert a new document into a MongoDB collection (database)
-        fullname,
+        fullName,
         avatar: avatar.url,
         coverImage: coverImage?.url || "", //as we have not checked that coverImage is provided or not
         email,

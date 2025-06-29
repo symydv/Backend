@@ -6,21 +6,14 @@ import bcrypt from "bcrypt"
 
 const userschema = new Schema(
     {
-    id: {
-        type: String,
-        required: true,
-        unique: true,
-        lowercase: true,
-        trim: true, // ensures that any extra spaces at the start or end of a string are removed before saving to the database.
-        index: true //index: true tells MongoDB to create an index for that field, improving query performance for lookups, sorting, and ensuring uniqueness (when combined with unique: true).it is not optimised so dont use it every where.
-    },
+    
     watchHistory:[ 
         {
         type: Schema.Types.ObjectId,
         ref: "video"
         }
     ],
-    userName: {
+    username: {
         type: String,
         required: true,
         unique: true,
@@ -46,7 +39,7 @@ const userschema = new Schema(
         type: String, //cloudinary url
         required: true,
     },
-    coverimage: {
+    coverImage: {
         type: String //cloudinary url
     },
     password: {
