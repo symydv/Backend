@@ -94,7 +94,7 @@ const registerUser = asyncHandler( async(req, res) => {
 
     //7. and 8.
     const createdUser = await User.findById(user._id).select(
-        "-password -refreshToken" // '-' ke baad jo bhi likha hai wo hame nahi chahiye hota hai
+        "-password -refreshToken" // '-' ke baad jo bhi likha hai wo hame nahi chahiye hota hai to wo database me show nahi hoga
     ) 
     //db automatically creates "_id" for each data block
 

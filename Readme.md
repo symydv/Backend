@@ -102,3 +102,4 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 26. import {upload} from "../middlewares/multer.middleware.js" in our "user router" file
 ---------------
 27. we used postman to test our registration process using cloudinary, MongoDB and Multer (Check lecture 14.) , also learned about use of environment in postman and many more things.
+---------------

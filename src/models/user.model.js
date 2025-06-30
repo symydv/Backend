@@ -62,6 +62,8 @@ const userschema = new Schema(
 )
 
 
+//######## Password Hashing with pre("save") Hook ################
+
 //pre() is a hook :In Mongoose, the pre method is used to define middleware that runs before a certain action (like saving, validating, or removing a document) occurs.
 //pre() me kripya arrow function na use kare kyuki arrow function me "this" use nahi kar sakte par isme "this" ki jarurat hai.
 //  "save", matlab just save hone se pehle kuch use karna hai.
@@ -85,7 +87,7 @@ userschema.methods.generateAccessToken = function(){
         {
             _id: this._id,
             email: this.email,
-            userName: this.userName,
+            username: this.username,
             fullName: this.fullName
         },
         //2. accesse token
@@ -96,6 +98,12 @@ userschema.methods.generateAccessToken = function(){
         }
     )
 }
+
+// Term	What It Is
+// ACCESS_TOKEN_SECRET ->	🔐 Private key to sign and verify tokens (never sent to client)
+// Access token (JWT) ->	📜 The actual string you generate with jwt.sign() and send to the client
+// Token content ->	 👤 Encoded payload (like user ID, email) + digital signature
+
 //These methods generate signed JWTs for authentication and session management, using user info and secret keys from your environment variables.
 userschema.methods.generateRefreshToken = function(){
     return jwt.sign(
