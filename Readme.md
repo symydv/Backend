@@ -103,3 +103,6 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 ---------------
 27. we used postman to test our registration process using cloudinary, MongoDB and Multer (Check lecture 14.) , also learned about use of environment in postman and many more things.
 ---------------
+28. created "loginUser" and "logoutUser" in "user.controllers.js", and added their routes in "user.routes.js" . also learned about generating and using access and refresh tokens.
+
+29. created "auth.middleware.js" file in middlewares
