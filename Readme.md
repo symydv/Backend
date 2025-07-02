@@ -105,4 +105,6 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 ---------------
 28. created "loginUser" and "logoutUser" in "user.controllers.js", and added their routes in "user.routes.js" . also learned about generating and using access and refresh tokens.
 
-29. created "auth.middleware.js" file in middlewares
+29. created "auth.middleware.js" file in middlewares.
+---------------
+30. added "subscription.model.js" in "models".
