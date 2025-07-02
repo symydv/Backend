@@ -166,7 +166,7 @@ const loginUser = asyncHandler( async(req, res) => {
     //4.
     const {accessToken, refreshToken} = await generateAccessAndRefreshTokens(user._id)
     
-    const loggedInUser = await User.findById(user._id).select("-password, -refreshToken")  //optional step
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken")  //optional step
 
     const option = {
         httpOnly: true,
@@ -194,14 +194,16 @@ const logoutUser = asyncHandler(async(req, res) => {
     await User.findByIdAndUpdate(
         req.user._id,
         {
-            $set:{
-                refreshToken: undefined
+            $unset:{
+                refreshToken: 1
             }
         },
         {
             new: true
         }
     )
+    
+    console.log("User in logout:", req.user) //jsut to check if we are getting the correct user.
 
     const options = {
         httpOnly: true, //JS on the client can’t access these cookies (prevents XSS)
@@ -212,9 +214,21 @@ const logoutUser = asyncHandler(async(req, res) => {
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
-    .json(new ApiResponse(200, {}, "User loggedOut successfully."))
+    .json(new ApiResponse(200, {user: req.user}, `User loggedOut successfully.`))
 })
 
+
+
+// some points about our below function "refreshAccessToken"
+
+// ❌ The backend route does not run by itself.
+
+// ✅ The frontend must explicitly call it when it detects:
+
+// should call when accessToken has expired (usually via 401 response).
+
+
+// Or, user is opening the app after a long time
 const refreshAccessToken = asyncHandler(async(req, res) => {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken
 

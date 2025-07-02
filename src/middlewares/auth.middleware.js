@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 //isko ham logout ki process me use kar rahe hai
 export const verifyJWT = asyncHandler(async(req, res, next) => {
     try {
-        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
+        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "") //because "Authorization": Bearer <token> , in postman
     
         if (!token) {
             throw new ApiError(401, "Unauthorized request")
@@ -14,7 +14,7 @@ export const verifyJWT = asyncHandler(async(req, res, next) => {
     
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
     
-        const user = await User.findById(decodedToken?._id).select("-password, -refreshToken")
+        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
     
         if(!user){
             throw new ApiError(401, "Invalid Access Token")
