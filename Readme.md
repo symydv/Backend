@@ -108,3 +108,11 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 29. created "auth.middleware.js" file in middlewares.
 ---------------
 30. added "subscription.model.js" in "models".
+
+31. added more user controlls in "user.controller.js" {
+    changeCurrentPassword,
+    getCurrentUser,
+    updateAccountDetails,
+    updateUserAvatar,
+    updateUserCoverImage
+}
