@@ -105,7 +105,9 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
 ---------------
 28. created "loginUser" and "logoutUser" in "user.controllers.js", and added their routes in "user.routes.js" . also learned about generating and using access and refresh tokens.
 
-29. created "auth.middleware.js" file in middlewares.
+29. created "auth.middleware.js" file in middlewares.{
+    created a function "verifyJWT", its main purpose is to varify the current user using "cookies" and "accessToken", it is used inside many routes (eg, logoutUser) as middleware to get access of the user as req.user  
+}
 ---------------
 30. added "subscription.model.js" in "models".
 
@@ -116,3 +118,19 @@ we also created notes on HTTP in "BackendCoC/HTTPCrashCourse/Notes.txt"#--------
     updateUserAvatar,
     updateUserCoverImage
 }
+----------------
+32. learned about "subscriptionSchema" model, and why we made it saperately. Watch 18th lecture "Understand the subscription Schema".{
+    lets assume we have users:- a,b,c,cac,hcc,fcc.
+    now 'a', "b" and "c" subscribes to "cac"
+    and "c" also subscribe to "hcc" and "fcc",
+    then there will be 5 different subsciptionSchema models for all the combinations, then if we have to find how many subscriber does "cac" have, we can just find all subsciption models whose value of "channel" is "cac" and count them
+}
+----------------
+33. learned mongoDB aggregation pipelines.{
+    Aggregation pipelines in MongoDB are powerful tools used to transform and analyze data. Instead of writing complex nested queries, you build a "pipeline" of operations, similar to Unix pipes or functional programming.
+    It's a sequence of stages that process documents from a collection and return computed results.
+
+Each stage transforms the data and passes the output to the next stage.
+} read its documentation on mongoDB website, watch 19th lecture.
+---------------
+34. created new pipeline for user's watch history. Also added routes.
