@@ -44,10 +44,22 @@ router.route("/logout").post(verifyJWT, logoutUser) // verifyJWT is a middleware
 router.route("/refresh-token").post(refreshAccessToken)
 
 router.route("/change-password").post(verifyJWT, changeCurrentPassword)
+// "post" is used when:
+// You're creating new data (e.g., registering a user).
+// Or submitting sensitive data like passwords, even if nothing is created.
 
 router.route("/current-user").get(verifyJWT, getCurrentUser)
+// "get" is used when :
+// You want to retrieve data.
+// No changes are made to the server or database.
+// Safe and idempotent (can be repeated without side effects).
+//you can use "post" also but that is a heavy proccess.
+
 
 router.route("/update-account").patch(verifyJWT, updateAccountDetails) //.post will update every thing so using patch
+//use "patch" when:
+// You're updating part of an existing resource.
+// It's not a full replacement, unlike PUT.
 
 router.route("/avatar").patch(verifyJWT, upload.single("avatar"), updateUserAvatar)
 // upload.single("avatar")

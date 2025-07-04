@@ -506,10 +506,10 @@ const getWatchHistory = asyncHandler(async(req, res) => {
         {
             $lookup: {
                 from: "videos",
-                localField: "wathHistory",
+                localField: "watchHistory",
                 foreignField: "_id",
                 as: "watchHistory",
-                pipeline: [  //can be used to apply pipelines inside other pipelines.
+                pipeline: [  //can be used to apply pipelines inside other pipelines. as we are applying loop on videos so the next lookup will be on videos model
                     {
                         $lookup: {
                             from: "users",
