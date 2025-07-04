@@ -12,6 +12,7 @@
 
 4. use "mkdir folder1, folder2" to create folders in your current diretory
 
+5. use "pwd" to check current directory (terminal directory)
 
 
 # Some information/process notes-
