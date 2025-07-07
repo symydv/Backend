@@ -5,6 +5,7 @@ import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
+import { v2 as cloudinary} from "cloudinary"
 
 
 const getAllVideos = asyncHandler(async (req, res) => {
@@ -119,21 +120,131 @@ const publishAVideo = asyncHandler(async (req, res) => {
 const getVideoById = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: get video by id
+    const video = await Video.findById(videoId)
+    if (!video) {
+        throw new ApiError(404, "video not found")   
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, video, "video fetched successfully."))
 })
 
 const updateVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: update video details like title, description, thumbnail
+    const {newTitle, newDescription} = req.body
+    const newThumbnailLocalPath = req.file?.path
+
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(404, "video not found")
+    }
+    //below code ensure that even if newThumbnail is not provided our code runs and updates other fields.
+    let newThumbnail;
+    if (newThumbnailLocalPath) {
+        // 1. Try uploading new thumbnail first
+        newThumbnail = await uploadOnCloudinary(newThumbnailLocalPath);
+        if (!newThumbnail.url) {
+            throw new ApiError(400, "file Upload failed.")
+        }
+
+        // 2. If upload successful, delete old thumbnail
+        if (video.thumbnail) {
+            try {
+                const segments = video.thumbnail.split("/");
+                const fileWithExt = segments.at(-1);
+                const folder = segments.at(-2);
+                const publicId = `${folder}/${fileWithExt.split(".")[0]}`;
+
+                await cloudinary.uploader.destroy(publicId);
+            } catch (err) {
+                console.error("Failed to delete old thumbnail:", err.message);
+            }
+        }
+    }
+
+    
+
+    
+
+    //below code insures that we can update whatever items we want to. So if you dont want to update any of the fieldsjust dont give input in those.
+    if (newTitle?.trim()) video.title = newTitle; //just checking that title string should not just be a space " " , same goes for description.
+    if (newDescription?.trim()) video.description = newDescription; 
+    if (newThumbnail?.url) video.thumbnail = newThumbnail.url;
+    await video.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, video, "video details updated successfully."))
 
 })
 
 const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
+
+    const video = await Video.findByIdAndDelete(videoId)
+    if (!video) {
+        throw new ApiError(404, "Video not found.")
+    }
+
+    // 2. Extract Cloudinary public_id and delete the video file
+    if (video.videoFile) { //check video model.
+        try {
+        const videoUrl = video.videoFile;
+        const segments = videoUrl.split("/");
+        const fileWithExt = segments.at(-1); // e.g., abc123.mp4
+        const folder = segments.at(-2); // e.g., "videos"
+        const publicId = `${folder}/${fileWithExt.split(".")[0]}`; // "videos/abc123"
+
+        await cloudinary.uploader.destroy(publicId, {
+            resource_type: "video",
+        });
+        } catch (err) {
+        console.error("Failed to delete video from Cloudinary:", err.message);
+        }
+    }
+
+    // 3. Extract Cloudinary public_id and delete the thumbnail
+    if (video.thumbnail) {
+        try {
+        const thumbUrl = video.thumbnail;
+        const segments = thumbUrl.split("/");
+        const fileWithExt = segments.at(-1);
+        const folder = segments.at(-2);
+        const publicId = `${folder}/${fileWithExt.split(".")[0]}`;
+
+        await cloudinary.uploader.destroy(publicId, {
+            resource_type: "image",
+        });
+        } catch (err) {
+        console.error("Failed to delete thumbnail from Cloudinary:", err.message);
+        }
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, video, "video deleted successfully."))
 })
 
 const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
+
+    const video = await Video.findById(videoId)
+
+    if (!video) {
+        throw new ApiError(404, "video not found.")
+    }
+
+    video.isPublished = ! video.isPublished;
+
+    await video.save({validateBeforeSave: false})
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, video, "publish status Toggled successfully."))
 })
 
 export {
