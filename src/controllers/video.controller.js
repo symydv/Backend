@@ -7,6 +7,7 @@ import {asyncHandler} from "../utils/asyncHandler.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { v2 as cloudinary} from "cloudinary"
 
+//TODO : After completion of whole code write aggregation pipelines to connect more things.as you need many user details like user's avatar and username , subscribers , views, likes aling with video. 
 
 const getAllVideos = asyncHandler(async (req, res) => {
     const { page = 1, limit = 10, query, sortBy, sortType, userId } = req.query
@@ -24,9 +25,7 @@ const getAllVideos = asyncHandler(async (req, res) => {
         throw new Error("Invalid userId"); // or return 400 response
         }
 
-        const filter = {
-        owner: new mongoose.Types.ObjectId(ownerId),
-    };
+        filter.owner= new mongoose.Types.ObjectId(ownerId)
     }
 
     // 👇 If a search query is provided, add case-insensitive title match
