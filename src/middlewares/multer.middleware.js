@@ -27,7 +27,7 @@ export const upload = multer({ storage });
 2. "upload" ko "user.routes.js" me use kiya to get files from user in postman or in website.
 3. same route me hamne "registerUser" function bhi use kiya hai.
 4. usi "registerUser" me hamne "cloudinary .js" me created "uploadOnCloudinary" function use kiya to upload our files on cloudinary website.
-5. aur "uploadOnCloudinary" function me last me hamne dono try and catch me "fs.unlinkSync" ka use kiya hai to syncronously unlink the file from our local disk even if it is uploaded on cloudinary or not to clear up our local storage.
+5. aur "uploadOnCloudinary" function me last me hamne dono try and catch me "fs.unlinkSync" ka use kiya hai to syncronously unlink the file from our local disk even if it is uploaded on cloudinary or not, to clear up our local storage.
 
 ## aur fir yahi proccess hamne videos me bhi follow kari.
 */

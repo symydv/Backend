@@ -3,15 +3,60 @@ import {Like} from "../models/like.model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
+import { Video } from "../models/video.model.js"
 
 const toggleVideoLike = asyncHandler(async (req, res) => {
     const {videoId} = req.params
     //TODO: toggle like on video
+    if (!mongoose.Types.ObjectId.isValid(videoId)) {
+        throw new ApiError(400, "Invalid video ID.");
+    }
+    const video = await Video.findById(videoId);
+    if (!video) {
+        throw new ApiError(404, "Video not found.");
+    }
+
+    let videoLike = await Like.findOne({video:videoId, likedBy: req.user._id});
+    let message = ""
+
+    if (videoLike) {
+        await videoLike.deleteOne()
+        message = "Video unliked successfully."
+    } else {
+        videoLike = await Like.create({video: videoId, likedBy: req.user._id})
+        message = "Video liked successfully."
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, videoLike, message))
 })
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
     const {commentId} = req.params
     //TODO: toggle like on comment
+    if (!isValidObjectId(commentId)) {
+        throw new ApiError(400, "Invalid comment Id")
+    }
+    const comment = await Comment.findById(commentId)
+    if (!comment) {
+        throw new ApiError(404, "comment not found.")
+    }
+
+    let commentLike = await Like.findOne({comment:commentId, likedBy: req.user._id});
+    let message =""
+
+    if (commentLike) {
+        await commentLike.deleteOne()
+        message = "comment unliked successfully."
+    } else {
+        commentLike = await Like.create({comment:commentId, likedBy: req.user._id})
+        message = "comment liked successfully."
+    }
+
+    return res
+    .status(200)
+    .json(new ApiResponse(200, commentLike, message))
 
 })
 
