@@ -4,6 +4,7 @@ import {User} from "../models/user.model.js"
 import {ApiError} from "../utils/ApiError.js"
 import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
+import { Like } from "../models/like.model.js"
 
 const createTweet = asyncHandler(async (req, res) => {
     //TODO: create tweet
@@ -108,6 +109,7 @@ const deleteTweet = asyncHandler(async (req, res) => {
         throw new ApiError(403, "You are not authorized to delete this tweet.");
     }
 
+    await Like.deleteMany({tweet: tweetId})
     // Step 3: Delete the tweet
     await tweet.deleteOne();
     return res

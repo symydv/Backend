@@ -6,6 +6,9 @@ import {ApiResponse} from "../utils/ApiResponse.js"
 import {asyncHandler} from "../utils/asyncHandler.js"
 import {uploadOnCloudinary} from "../utils/cloudinary.js"
 import { v2 as cloudinary} from "cloudinary"
+import { Comment } from "../models/comment.model.js"
+import { Like } from "../models/like.model.js"
+import { Playlist } from "../models/playlist.model.js"
 
 //TODO : After completion of whole code write aggregation pipelines to connect more things.as you need many user details like user's avatar and username , subscribers , views, likes aling with video. 
 
@@ -136,6 +139,9 @@ const updateVideo = asyncHandler(async (req, res) => {
     const newThumbnailLocalPath = req.file?.path
 
     const video = await Video.findById(videoId)
+    if (video.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not allowed to update someone else's video.");
+    }
 
     if (!video) {
         throw new ApiError(404, "video not found")
@@ -164,10 +170,6 @@ const updateVideo = asyncHandler(async (req, res) => {
         }
     }
 
-    
-
-    
-
     //below code insures that we can update whatever items we want to. So if you dont want to update any of the fieldsjust dont give input in those.
     if (newTitle?.trim()) video.title = newTitle; //just checking that title string should not just be a space " " , same goes for description.
     if (newDescription?.trim()) video.description = newDescription; 
@@ -184,10 +186,16 @@ const deleteVideo = asyncHandler(async (req, res) => {
     const { videoId } = req.params
     //TODO: delete video
 
-    const video = await Video.findByIdAndDelete(videoId)
+    const video = await Video.findById(videoId)
     if (!video) {
-        throw new ApiError(404, "Video not found.")
+        throw new ApiError(404, "Video not found.");
     }
+
+    // ✅ Ownership check
+    if (video.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not allowed to delete someone else's video.");
+    }
+
 
     // 2. Extract Cloudinary public_id and delete the video file
     if (video.videoFile) { //check video model.
@@ -223,6 +231,26 @@ const deleteVideo = asyncHandler(async (req, res) => {
         }
     }
 
+    //delete all the comments on this video.
+    await Comment.deleteMany({ video: videoId });
+
+    // Delete all likes on this video
+    await Like.deleteMany({ video: videoId });
+
+    // Remove this video from all playlists that contain it
+    await Playlist.updateMany(
+        { videos: videoId },
+        { $pull: { videos: videoId } }
+    );
+
+    //remove the video from users watch history if any
+    await User.updateMany(
+        { watchHistory: videoId },
+        { $pull: { watchHistory: videoId } }
+    );
+
+    await Video.deleteOne({_id: videoId})
+
     return res
     .status(200)
     .json(new ApiResponse(200, video, "video deleted successfully."))
@@ -232,6 +260,9 @@ const togglePublishStatus = asyncHandler(async (req, res) => {
     const { videoId } = req.params
 
     const video = await Video.findById(videoId)
+    if (video.owner.toString() !== req.user._id.toString()) {
+        throw new ApiError(403, "You are not allowed to change publish status of someone else's video.");
+    }
 
     if (!video) {
         throw new ApiError(404, "video not found.")
