@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
-<body>
+<body style="background-color: #20808D;">
   <script>
     async function login() {
       const res = await fetch("http://localhost:8000/api/v1/users/login",{
@@ -20,8 +20,8 @@
       })
       const result = await res.json();
       authToken = result.data.accessToken;
-      console.log(result);
-      console.log(authToken);
+      // console.log(result);
+      // console.log(authToken);
       
       
       
